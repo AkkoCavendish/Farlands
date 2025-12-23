@@ -18,7 +18,7 @@ const members=[
     rank:"Staff",
     titles:"Misil, diseñadora",
     desc:"",
-    img:"assets/icons/celynnei.jpg"
+    img:"assets/icons/celynnei.jpeg"
 },
 {
     name:"scorcraft",
@@ -232,4 +232,5 @@ const members=[
 }
 
 ];
+
 
