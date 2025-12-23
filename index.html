@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Farlands</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="data/builds.js"></script>
+<script src="data/members.js"></script>
+<script src="data/events.js"></script>
+<script src="data/gallery.js"></script>
+<link rel="shortcut icon" href="assets/icon.png">
+
+<style>
+:root{
+    --bg:#0b1220;
+    --panel:#101a33;
+    --panel2:#16244d;
+    --accent:#2f80ff;
+    --accent-soft:#6aa8ff;
+    --border:#22356b;
+    --text:#e6ecff;
+}
+
+body{
+    margin:0;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+h2,h3,h4{color:var(--accent-soft);}
+button{background:none;border:none;color:var(--text);cursor:pointer}
+
+/* ================= NAV ================= */
+nav{
+    position:sticky;top:0;z-index:10;
+    background:linear-gradient(90deg,var(--panel),var(--panel2));
+    display:flex;gap:20px;padding:14px;
+    border-bottom:1px solid var(--border);
+}
+
+/* ================= NAV BRAND ================= */
+.nav-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding-right:20px;
+    border-right:1px solid var(--border);
+}
+
+.nav-brand img{
+    width:32px;
+    height:32px;
+}
+
+.nav-brand span{
+    font-weight:600;
+    color:var(--accent-soft);
+    white-space:nowrap;
+}
+
+/* Empuja los botones un poco */
+.nav-links{
+    display:flex;
+    gap:20px;
+}
+
+
+/* ================= SECTIONS ================= */
+section{
+    display:none;
+    padding:25px;
+    max-width:1200px;
+    margin:auto;
+    animation:fadeIn .4s ease;
+}
+section.active{display:block;}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:none}
+}
+
+/* ================= CARDS ================= */
+.card{
+    background:var(--panel);
+    border-radius:14px;
+    padding:18px;
+    border:1px solid var(--border);
+    transition:.25s;
+}
+.card:hover{border-color:var(--accent-soft);cursor: pointer;}
+
+/* ================= MAP ================= */
+#map-viewport{
+    width:100%;
+    max-width:800px;
+    height:450px;
+    overflow:hidden;
+    border-radius:14px;
+    border:1px solid var(--border);
+    position:relative;
+    cursor:grab;
+}
+
+#map-inner{
+    position:absolute;
+    transform-origin:0 0;
+    transition:transform .15s ease-out;
+}
+
+#map-inner img{
+    width:800px;
+    pointer-events:none;
+    user-select:none;
+}
+
+.map-marker{
+    position:absolute;
+    width:7px;height:7px;
+    background:var(--accent);
+    border-radius:50%;
+    border:1px solid #fff;
+    transform:translate(-50%,-50%);
+    cursor:pointer;
+    transition:.2s;
+}
+.map-marker:hover{transform:translate(-50%,-50%) scale(1.1)}
+
+/* ZOOM */
+#zoom-controls{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+.zoom-btn{
+    width:44px;height:44px;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:12px;
+    font-size:22px;
+    transition:.2s;
+}
+.zoom-btn:hover{background:var(--accent)}
+
+/* ================= BUILD DETAIL ================= */
+#build-detail{
+    margin-top:25px;
+    display:grid;
+    grid-template-columns:420px 1fr; /* imagen más grande */
+    gap:30px;
+    animation:fadeIn .4s ease;
+}
+
+.build-info{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.build-members{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.build-member{
+    padding:6px 10px;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    font-size:12px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.build-member:hover{
+    background:var(--accent);
+}
+
+
+
+#build-gallery{
+    position:relative;
+}
+
+#build-gallery img{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+    border-radius:14px;
+    transition:opacity .3s;
+}
+
+#build-gallery::before{
+    content:"Selecciona una construcción";
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:260px;
+    background:#0b1220;
+    border-radius:14px;
+    color:var(--accent-soft);
+    font-size:14px;
+}
+
+.build-img-title{
+    margin-top:8px;
+    text-align:center;
+    font-size:14px;
+    color:var(--accent-soft);
+    font-weight:600;
+}
+
+
+/* Cuando hay imagen cargada, ocultar placeholder */
+#build-gallery.has-image::before{
+    content:none;
+}
+
+#build-gallery img{
+    cursor:zoom-in;
+}
+
+/* ================= BUILD GALLERY CONTROLS ================= */
+
+.build-gallery-wrapper{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+/* Botones laterales */
+.gallery-nav{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    min-height:44px;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:50%;
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:.2s;
+}
+
+.gallery-nav:hover{
+    background:var(--accent);
+}
+
+/* Imagen */
+#build-gallery{
+    flex:1;
+    position:relative;
+}
+
+#build-gallery img{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+    border-radius:14px;
+    transition:opacity .3s;
+}
+
+/* Responsive */
+@media (max-width:600px){
+    .build-gallery-wrapper{
+        gap:8px;
+    }
+
+    .gallery-nav{
+        width:38px;
+        height:38px;
+        font-size:18px;
+    }
+}
+
+
+.progress{
+    position:relative;
+    height:18px;
+    background:#1b2c55;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress span{
+    display:block;
+    height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent-soft));
+    transition:width .5s ease;
+}
+
+.progress-text{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:600;
+    color:#fff;
+    text-shadow:0 0 4px #000;
+}
+
+
+/* ================= MEMBERS ================= */
+.members-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:20px;
+}
+.member-card{
+    text-align:center;
+}
+.member-card img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    margin-bottom:10px;
+}
+
+/* ================= EVENTS ================= */
+.events-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:20px;
+}
+.event-card{
+    transition:.25s;
+}
+.event-card:hover{transform:translateY(-5px)}
+.event-card img{
+    width:100%;
+    height:140px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+/* ================= RULES ================= */
+.rules-list{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+.rule{
+    padding:15px 18px;
+    border-left:4px solid var(--accent);
+    background:var(--panel);
+    border-radius:10px;
+    animation:fadeIn .3s ease;
+}
+.rule span{
+    color:var(--accent-soft);
+    font-weight:bold;
+}
+
+/* ================= GALERY ================= */
+
+.gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:20px;
+}
+
+.gallery-card{
+    position:relative;
+    overflow:hidden;
+    border-radius:14px;
+    cursor:pointer;
+}
+
+.gallery-card img{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    transition:.3s;
+}
+
+.gallery-info{
+    position:absolute;
+    inset:0;
+    background:rgba(11,18,32,.85);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    opacity:0;
+    transition:.3s;
+    padding:15px;
+}
+
+.gallery-card:hover img{
+    transform:scale(1.1);
+}
+
+.gallery-card:hover .gallery-info{
+    opacity:1;
+}
+
+
+/* ================= DYNAMIC BACKGROUND ================= */
+#dynamic-bg{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+
+    background-image:url("assets/bg.png"); /* 👈 TU IMAGEN */
+    background-repeat:repeat;
+    background-size:300px 300px; /* escala del patrón */
+
+    animation:bgMove 60s linear infinite;
+}
+
+/* Oscurece un poco para legibilidad */
+#dynamic-bg::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(11,18,32,.85); /* mismo tono que tu bg */
+}
+
+/* Movimiento diagonal infinito */
+@keyframes bgMove{
+    from{
+        background-position:0 0;
+    }
+    to{
+        background-position:600px 600px;
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px){
+    #build-detail{
+        grid-template-columns:1fr;
+        gap:20px;
+    }
+
+    #build-gallery img,
+    #build-gallery::before{
+        height:220px;
+    }
+}
+
+@media (max-width: 600px){
+    section{
+        padding:15px;
+    }
+
+    #map-viewport{
+        height:300px;
+    }
+
+    .nav-links{
+        flex-wrap:wrap;
+        gap:10px;
+    }
+
+    .nav-links button{
+        font-size:14px;
+    }
+
+    .build-members{
+        gap:6px;
+    }
+
+    .build-member{
+        font-size:11px;
+        padding:5px 8px;
+    }
+}
+
+/* ================= IMAGE VIEWER ================= */
+
+#img-viewer{
+    position:fixed;
+    inset:0;
+    z-index:100;
+}
+
+.viewer-backdrop{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.7);
+}
+
+.viewer-content{
+    position:relative;
+    max-width:90vw;
+    max-height:90vh;
+    margin:auto;
+    top:50%;
+    transform:translateY(-50%);
+    background:var(--panel);
+    border-radius:14px;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    animation:fadeIn .25s ease;
+}
+
+.viewer-content img{
+    max-width:100%;
+    max-height:70vh;
+    object-fit:contain;
+    border-radius:10px;
+}
+
+.viewer-info{
+    text-align:center;
+}
+
+.viewer-info h3{
+    margin:5px 0;
+    color:var(--accent-soft);
+}
+
+.viewer-info p{
+    font-size:14px;
+    opacity:.9;
+}
+
+.viewer-close{
+    position:absolute;
+    top:10px;
+    right:10px;
+    font-size:20px;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:50%;
+    width:36px;
+    height:36px;
+}
+
+.viewer-close:hover{
+    background:var(--accent);
+}
+
+/* Mobile tweaks */
+@media (max-width:600px){
+    .viewer-content{
+        max-width:95vw;
+        max-height:95vh;
+    }
+
+    .viewer-content img{
+        max-height:60vh;
+    }
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<div id="dynamic-bg"></div>
+
+
+<nav>
+    <!-- BRAND -->
+    <div class="nav-brand">
+        <img src="assets/icon.png" alt="Icono facción">
+        <span>Farlands</span>
+    </div>
+
+    <!-- LINKS -->
+    <div class="nav-links">
+        <button onclick="show('map')">Mapa</button>
+        <button onclick="show('members')">Miembros</button>
+        <button onclick="show('events')">Eventos</button>
+        <button onclick="show('rules')">Mandamientos</button>
+        <button onclick="show('gallery')">Galería</button>
+    </div>
+</nav>
+
+
+<!-- MAP -->
+<section id="map" class="active">
+<h2>Mapa</h2>
+
+<div id="map-viewport">
+    <div id="map-inner">
+        <img src="assets/map.png">
+    </div>
+
+    <div id="zoom-controls">
+        <button class="zoom-btn" onclick="zoom(1.2)">+</button>
+        <button class="zoom-btn" onclick="zoom(0.8)">−</button>
+    </div>
+</div>
+
+<div id="build-detail" class="card">
+    <div class="build-gallery-wrapper">
+        <button class="gallery-nav left" onclick="prevImg()">❮</button>
+
+        <div id="build-gallery">
+            <img id="g-img" hidden onclick="openBuildViewer()">
+            <div id="g-img-title" class="build-img-title"></div>
+        </div>
+
+        <button class="gallery-nav right" onclick="nextImg()">❯</button>
+    </div>
+
+    <div class="build-info">
+        <h3 id="b-name">Selecciona una construcción</h3>
+        <p id="b-desc"></p>
+
+        <h4>Estado</h4>
+        <div class="progress">
+            <span id="b-progress"></span>
+            <div class="progress-text" id="b-progress-text">0%</div>
+        </div>
+
+        <h4>Miembros involucrados</h4>
+        <div id="b-members" class="build-members"></div>
+    </div>
+</div>
+</section>
+
+<!-- MEMBERS -->
+<section id="members">
+<h2>Miembros</h2>
+<div class="members-grid" id="membersGrid"></div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+<h2>Eventos</h2>
+<div class="events-grid" id="eventsGrid"></div>
+</section>
+
+<!-- RULES -->
+<section id="rules">
+<h2>Mandamientos de Farlands</h2>
+
+<div class="rules-list">
+    <div class="rule"><span>1.</span> Debes respetar a todos los miembros de Farlands</div>
+    <div class="rule"><span>2.</span> No Robaras a los Miembros</div>
+    <div class="rule"><span>3.</span> Si vas a construir, debes ser responsable</div>
+    <div class="rule"><span>4.</span> Si usas las granjas, replantar es tu deber.</div>
+    <div class="rule"><span>5.</span> No aceptar TP a extraños dentro de las fronteras</div>
+    <div class="rule"><span>6.</span> No compartir las zonas de farmeo</div>
+    <div class="rule"><span>7.</span> No grifear zonas cercanas a la ciudad</div>
+</div>
+</section>
+
+<!-- GALERY -->
+
+<section id="gallery">
+<h2>Galería</h2>
+<div class="gallery-grid" id="galleryGrid"></div>
+</section>
+
+<!-- IMAGE VIEWER -->
+<div id="img-viewer" hidden>
+    <div class="viewer-backdrop"></div>
+
+    <div class="viewer-content">
+        <button class="viewer-close" onclick="closeViewer()">✕</button>
+        <img id="viewer-img">
+        <div class="viewer-info">
+            <h3 id="viewer-title"></h3>
+            <p id="viewer-desc"></p>
+        </div>
+    </div>
+</div>
+
+
+<script>
+const buildGallery = document.getElementById("build-gallery");
+
+
+function show(id){
+    document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+/* MAP */
+let scale=1,posX=0,posY=0;
+const inner=document.getElementById("map-inner");
+const viewport=document.getElementById("map-viewport");
+
+function update(){
+    inner.style.transform=`translate(${posX}px,${posY}px) scale(${scale})`;
+}
+function zoom(f){scale*=f;update();}
+
+let drag=false,x=0,y=0;
+viewport.onmousedown=e=>{drag=true;x=e.clientX;y=e.clientY;}
+window.onmouseup=()=>drag=false;
+window.onmousemove=e=>{
+    if(!drag)return;
+    posX+=e.clientX-x;posY+=e.clientY-y;
+    x=e.clientX;y=e.clientY;
+    update();
+}
+
+/* BUILDINGS */
+
+let imgIndex=0,currentBuild=null;
+
+function loadBuild(b){
+    currentBuild=b;
+    imgIndex=0;
+
+    bName.textContent=b.name;
+    bDesc.textContent=b.desc;
+    bMembers.innerHTML = b.members.map(name => `
+        <div class="build-member"
+             onclick="location.href='assets/members/${name.toLowerCase()}.html'">
+            ${name}
+        </div>
+    `).join("");
+
+    bProgress.style.width=b.progress+"%";
+    document.getElementById("b-progress-text").textContent = b.progress + "%";
+
+    buildGallery.classList.add("has-image");
+
+    gImg.hidden = false;
+    gImg.style.opacity = 0;
+    if(!b.imgs || b.imgs.length === 0){
+        gImg.hidden = true;
+        document.getElementById("g-img-title").textContent = "Sin imágenes";
+        return;
+    }
+    setTimeout(()=>{
+        gImg.src = b.imgs[0].src;
+        document.getElementById("g-img-title").textContent = b.imgs[0].title;
+        gImg.style.opacity = 1;
+    },150);
+}
+
+
+
+function prevImg(){
+    if(!currentBuild)return;
+    imgIndex=(imgIndex-1+currentBuild.imgs.length)%currentBuild.imgs.length;
+    const img = currentBuild.imgs[imgIndex];
+    gImg.src = img.src;
+    document.getElementById("g-img-title").textContent = img.title;
+
+}
+function nextImg(){
+    if(!currentBuild)return;
+    imgIndex=(imgIndex+1)%currentBuild.imgs.length;
+    const img = currentBuild.imgs[imgIndex];
+    gImg.src = img.src;
+    document.getElementById("g-img-title").textContent = img.title;
+}
+
+const bName=document.getElementById("b-name");
+const bDesc=document.getElementById("b-desc");
+const bMembers=document.getElementById("b-members");
+const bProgress=document.getElementById("b-progress");
+const gImg=document.getElementById("g-img");
+
+builds.forEach(b=>{
+    const m = document.createElement("div");
+    m.className = "map-marker";
+
+    const size = b.size ?? 7; // tamaño por defecto si no se define
+
+    m.style.width = size + "px";
+    m.style.height = size + "px";
+    m.style.left = b.x + "%";
+    m.style.top  = b.y + "%";
+
+    m.onclick = () => loadBuild(b);
+    inner.appendChild(m);
+});
+
+
+/* MEMBERS location.href='assets/members/${m.id}.html'*/
+
+membersGrid.innerHTML = members.map(m=>`
+<div class="card member-card"
+     onclick="">
+    <img src="${m.img}">
+    <h4>${m.name}</h4>
+    <small>${m.rank}</small>
+    <p>${m.desc}</p>
+</div>`).join("");
+
+/* EVENTS */
+
+eventsGrid.innerHTML=events.map(e=>`
+<div class="card event-card" onclick="window.open('${e.link}','_blank')">
+    <img src="${e.img}">
+    <h4>${e.title}</h4>
+    <small>${e.date}</small>
+    <p>${e.desc}</p>
+</div>`).join("");
+
+/* GALERY */
+
+const viewer = document.getElementById("img-viewer");
+const viewerImg = document.getElementById("viewer-img");
+const viewerTitle = document.getElementById("viewer-title");
+const viewerDesc = document.getElementById("viewer-desc");
+
+function openViewer(index){
+    const g = galleryItems[index];
+
+    viewerImg.src = g.img;
+    viewerTitle.textContent = g.title;
+    viewerDesc.textContent = g.desc;
+
+    viewer.hidden = false;
+}
+
+function closeViewer(){
+    viewer.hidden = true;
+    viewerImg.src = "";
+}
+
+function openBuildViewer(){
+    if(!currentBuild) return;
+
+    const img = currentBuild.imgs[imgIndex];
+
+    viewerImg.src = img.src;
+    viewerTitle.textContent = img.title;
+    viewerDesc.textContent = img.desc || currentBuild.desc;
+
+    viewer.hidden = false;
+}
+
+
+
+/* Cerrar clickeando fondo */
+document.querySelector(".viewer-backdrop")
+    .addEventListener("click", closeViewer);
+
+
+galleryGrid.innerHTML = galleryItems.map((g,i)=>`
+<div class="gallery-card" onclick="openViewer(${i})">
+    <img src="${g.img}">
+    <div class="gallery-info">
+        <h4>${g.title}</h4>
+        <p>${g.desc}</p>
+    </div>
+</div>
+`).join("");
+
+
+</script>
+
+</body>
+</html>

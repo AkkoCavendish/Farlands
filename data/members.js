@@ -1,0 +1,233 @@
+const members=[
+{
+    name:"Beakko",
+    rank:"Líder",
+    titles:"Fundador, constructor",
+    desc:"Líder de la facción.",
+    img:"assets/icons/beakko.jpeg"
+},
+{
+    name:"mydo",
+    rank:"co-lider",
+    titles:"constructor, buscapleitos",
+    desc:"un moredaor y un carismatico y problematico chico",
+    img:"assets/icons/mydo.jpg"
+},
+{
+    name:"celynnei",
+    rank:"Staff",
+    titles:"Misil, diseñadora",
+    desc:"",
+    img:"assets/icons/celynnei.jpg"
+},
+{
+    name:"scorcraft",
+    rank:"Aliado",
+    titles:"constructor, veterano",
+    desc:"",
+    img:"assets/icons/scorcraftjpg.jpg"
+},
+{
+    name:"Silver_",
+    rank:"member",
+    titles:"constructor, futbolista",
+    desc:"",
+    img:"assets/icons/Silver_.jpg"
+},
+{
+    name:"Tostada",
+    rank:"Staff",
+    titles:"constructora, domadora",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Royxd",
+    rank:"member",
+    titles:"constructora, minera",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Sofilover",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Gatitos",
+    rank:"member",
+    titles:"Casera",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Brittanny",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Urii_wey",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Lyli1",
+    rank:"member",
+    titles:"constructora",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"_dais_",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"chico",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Madysson777",
+    rank:"member",
+    titles:"constructora",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"ArielZone12",
+    rank:"member",
+    titles:"constructor",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"XxGOKUxX",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Sofyy",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Agus22",
+    rank:"member",
+    titles:"Veterano",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"_Zoya_",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Alguienns",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Hisoyalguienxd",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Silvio_",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Braian_Pro",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"German25",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Mango_Kittty",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Lord_Gande",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Nighttail",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"TerUrbanPsycho53",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Bhuita333",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"BreadCrumb",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Player_alt",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+},
+{
+    name:"Nezuko12367",
+    rank:"member",
+    titles:"",
+    desc:"",
+    img:"assets/icons/1.png"
+}
+];
