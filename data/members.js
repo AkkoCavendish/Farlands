@@ -3,14 +3,14 @@ const members=[
     name:"Beakko",
     rank:"Líder",
     titles:"Fundador, constructor",
-    desc:"Líder de la facción.",
+    desc:"Fundador y amante de las torres",
     img:"assets/icons/beakko.jpeg"
 },
 {
     name:"mydo",
     rank:"co-lider",
     titles:"constructor, buscapleitos",
-    desc:"un moredaor y un carismatico y problematico chico",
+    desc:"El moredador mas rompereglas de todos",
     img:"assets/icons/mydo.jpg"
 },
 {
@@ -230,4 +230,5 @@ const members=[
     desc:"",
     img:"assets/icons/1.png"
 }
+
 ];
